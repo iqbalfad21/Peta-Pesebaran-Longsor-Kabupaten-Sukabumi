@@ -183,6 +183,43 @@
 				}
 			}
 		}).addTo(map); // Tambahkan ke peta
+	    			// Cek apakah browser mendukung Geolocation
+		if ('geolocation' in navigator) {
+			let userMarker; // Marker untuk lokasi pengguna
+			
+			// Fungsi untuk mengupdate posisi pengguna
+			const updatePosition = (position) => {
+				const { latitude, longitude } = position.coords;
+
+				if (!userMarker) {
+					// Jika marker belum ada, tambahkan marker baru
+					userMarker = L.marker([latitude, longitude])
+						.addTo(map)
+						.bindPopup("Lokasi Anda");
+				} else {
+					// Jika marker sudah ada, ubah posisinya
+					userMarker.setLatLng([latitude, longitude]);
+				}
+
+				// Set view peta ke lokasi pengguna
+				map.setView([latitude, longitude], 12);
+			};
+
+			// Mulai memantau perubahan posisi
+			navigator.geolocation.watchPosition(
+				updatePosition,
+				(error) => {
+					console.error("Gagal memantau lokasi pengguna:", error);
+				},
+				{
+					enableHighAccuracy: true, // Gunakan lokasi dengan akurasi tinggi
+					maximumAge: 0,           // Jangan gunakan cache
+					timeout: 10000           // Waktu maksimal untuk mendapatkan lokasi
+				}
+			);
+		} else {
+			alert("Browser Anda tidak mendukung Geolocation.");
+		}
     </script>
 </body>
 </html>

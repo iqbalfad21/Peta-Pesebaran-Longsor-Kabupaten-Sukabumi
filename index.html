@@ -10,8 +10,9 @@
         #map { 
             height: 75vh; 
         }
+        /* Memperbesar container gambar dalam popup */
         .leaflet-popup-content {
-            width: 500px;
+            width: 500px; /* Sesuaikan ukuran popup agar gambar lebih lebar */
         }
         .popup-images {
             display: flex;
@@ -20,9 +21,9 @@
             justify-content: space-between;
         }
         .popup-images img {
-            width: 70%;
-            max-width: 640px;
-            height: auto;
+            width: 70%; /* Lebar gambar, bisa diubah jika perlu */
+            max-width: 640px; /* Maksimum lebar gambar */
+            height: auto; /* Pertahankan proporsi gambar */
         }
         .photo-section {
             margin-bottom: 10px;
@@ -30,9 +31,10 @@
         .photo-section h3 {
             margin: 0;
         }
+        /* Styling untuk h1 (Header utama) */
         h1 {
             font-family: 'Poppins', sans-serif;
-            font-size: 2.5em;
+            font-size: 2.5em; /* Lebih kecil */
             background: linear-gradient(45deg, #ff7f50, #ff6347);
             color: transparent;
             background-clip: text;
@@ -42,14 +44,17 @@
             padding: 10px 0;
             animation: fadeIn 1s ease-in-out;
         }
+        /* Styling untuk h2 (Subjudul) */
         h2 {
             font-family: 'Poppins', sans-serif;
-            font-size: 1.5em;
+            font-size: 1.5em; /* Lebih kecil */
             color: #235;
             text-align: center;
             margin-top: 10px;
             padding-bottom: 20px;
         }
+
+        /* Animasi fadeIn untuk h1 */
         @keyframes fadeIn {
             0% {
                 opacity: 0;
@@ -68,105 +73,170 @@
     <div id="map"></div>
 
     <script src="lib/leaflet/leaflet.js"></script>
+    <!-- Mengimpor file geojsonData.js yang berisi data GeoJSON -->
     <script src="data/opsukabumi1.js"></script>
     <script src="data/JabarS1SKJ2024.js"></script>
     <script src="data/JembatanJabar.js"></script>
-
+ 
     <script>
-        // Inisialisasi peta
-        var map = L.map('map').setView([-7.0626201, 106.5767793], 11);
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '© OpenStreetMap contributors'
-        }).addTo(map);
+		// Inisialisasi peta
+		var map = L.map('map').setView([-7.0626201, 106.5767793], 11); // Posisi awal Sukabumi
+		// Tambahkan layer peta dasar
+		L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+			attribution: '© OpenStreetMap contributors'
+		}).addTo(map);
+		
+		// Ikon khusus untuk geolocation
+		var geoLocationIcon = L.icon({
+			iconUrl: 'data/output-onlinegiftools.gif',
+			iconSize: [40, 40], // Ukuran ikon [width, height]
+			iconAnchor: [20, 40], // Titik anchor (biasanya di tengah bawah)
+			popupAnchor: [0, -40] // Posisi popup relatif ke ikon
+		});
 
-        // Custom icons
-        var geolocationIcon = L.icon({
-            iconUrl: 'data/output-onlinegiftools.gif',
-            iconSize: [30, 30],
-            iconAnchor: [15, 30]
-        });
+		// Ikon khusus untuk opsukabumi1
+		var opsukabumiIcon = L.icon({
+			iconUrl: 'data/icons8-location-48.png',
+			iconSize: [32, 32],
+			iconAnchor: [16, 16]
+		});
 
-        var opsukabumiIcon = L.icon({
-            iconUrl: 'data/icons8-location-48.png',
-            iconSize: [30, 30],
-            iconAnchor: [15, 30]
-        });
+		// Fungsi untuk menghasilkan HTML foto dalam popup
+		function generatePhotoHTML(photos) {
+			if (photos && photos.length > 0) {
+				return photos.map(photo => {
+					// Cek jika photo adalah string (path gambar) atau objek lain
+					return `<img src="${photo}" alt="Foto" style="width: 48%; max-width: 300px; margin-bottom: 10px;"/>`;
+				}).join(''); // Gabungkan gambar dalam popup
+			}
+			return "<p>Tidak ada foto tersedia.</p>";
+		}
+		
+		// Fungsi untuk menampilkan foto berdasarkan kategori
+		function generatePhotoSections(feature) {
+			var kondisiAwal = feature.properties["Kondisi Awal"] || [];
+			var kondisiSaatPenanganan = feature.properties["Kondisi Saat Penanganan"] || [];
+			var kondisiSetelahPenanganan = feature.properties["Kondisi Setelah Penanganan"] || [];
 
-        // Fungsi untuk membuat marker opsukabumi1
-        L.geoJSON(opsukabumi1, {
-            pointToLayer: function (feature, latlng) {
-                return L.marker(latlng, { icon: opsukabumiIcon });
-            },
-            onEachFeature: function (feature, layer) {
-                layer.bindPopup(`
-                    <b>No:</b> ${feature.properties.No || "Tidak tersedia"}<br>
-                    <b>PPK:</b> ${feature.properties.PPK || "Tidak tersedia"}<br>
-                    <b>Ruas:</b> ${feature.properties.Ruas || "Tidak tersedia"}<br>
-                    <b>Bencana:</b> ${feature.properties.Bencana || "Tidak tersedia"}<br>
-                    <b>Perlu Perhatian Khusus:</b> ${feature.properties.PerKh || "Tidak tersedia"}<br>
-                    <b>KM:</b> ${feature.properties.KM || "Tidak tersedia"}<br>
-                    <b>Penanganan:</b> ${feature.properties.Penanganan || "Tidak tersedia"}<br>
-                    <b>Status Operasional:</b> ${feature.properties.Stat_opr || "Tidak tersedia"}<br>
-                    <b>Catatan:</b> ${feature.properties.Catatan || "Tidak tersedia"}<br>
-                `);
-            }
-        }).addTo(map);
-        // Menambahkan data jalnas ke peta
-        L.geoJSON(jalnas, {
-            style: function(feature) {
-                var linkId = feature.properties.LINKID || 0;
-                var colors = ['red', 'green', 'blue', 'orange', 'purple', 'brown', 'pink', 'cyan'];
-                var color = colors[linkId % colors.length];
-                return {
-                    color: color,
-                    weight: 5,
-                    opacity: 0.6
-                };
-            },
-            onEachFeature: function(feature, layer) {
-                if (feature.properties) {
-                    layer.bindPopup(`
-                        <b>LINKID:</b> ${feature.properties.LINKID || "Tidak tersedia"}<br>
-                        <b>Nama Ruas:</b> ${feature.properties.Nama_Ruas || "Tidak tersedia"}<br>
-                        <b>Satker:</b> ${feature.properties.Satker || "Tidak tersedia"}<br>
-                        <b>PPK:</b> ${feature.properties.PPK || "Tidak tersedia"}<br>
-                        <b>Panjang SK (km):</b> ${feature.properties.Panjang_SK__km_ || "Tidak tersedia"}<br>
-                        <b>Lintas:</b> ${feature.properties.Lintas || "Tidak tersedia"}<br>
-                        <b>Kab/Kota:</b> ${feature.properties.Kab_Kota || "Tidak tersedia"}<br>
-                        <b>Referensi Awal Ruas:</b> ${feature.properties.Referensi_Awal || "Tidak tersedia"}<br>
-                        <b>Referensi Akhir Ruas:</b> ${feature.properties.Referensi_Akhir || "Tidak tersedia"}<br>
-                        <b>No SK:</b> ${feature.properties.No_SK || "Tidak tersedia"}
-                    `);
-                }
-            }
-        }).addTo(map);
-        
-        // Geolocation untuk pengguna
-        if ('geolocation' in navigator) {
-            let userMarker;
-            navigator.geolocation.watchPosition(
-                (position) => {
-                    const { latitude, longitude } = position.coords;
-                    if (!userMarker) {
-                        userMarker = L.marker([latitude, longitude], { icon: geolocationIcon })
-                            .addTo(map)
-                            .bindPopup("Lokasi Anda");
-                    } else {
-                        userMarker.setLatLng([latitude, longitude]);
-                    }
-                },
-                (error) => {
-                    console.error("Gagal memantau lokasi pengguna:", error);
-                },
-                {
-                    enableHighAccuracy: true,
-                    maximumAge: 0,
-                    timeout: 10000
-                }
-            );
-        } else {
-            alert("Browser Anda tidak mendukung Geolocation.");
-        }
+			return `
+				<div class="photo-section">
+					<h3>Kondisi Awal:</h3>
+					${generatePhotoHTML(kondisiAwal)}
+				</div>
+				<div class="photo-section">
+					<h3>Kondisi Saat Penanganan:</h3>
+					${generatePhotoHTML(kondisiSaatPenanganan)}
+				</div>
+				<div class="photo-section">
+					<h3>Kondisi Setelah Penanganan:</h3>
+					${generatePhotoHTML(kondisiSetelahPenanganan)}
+				</div>
+			`;
+		}
+		// Tambahkan GeoJSON dengan validasi
+		L.geoJSON(opsukabumi1, {
+			filter: function (feature) {
+				// Pastikan koordinat ada dan valid
+				if (
+					feature.geometry &&
+					feature.geometry.type === "Point" &&
+					Array.isArray(feature.geometry.coordinates) &&
+					feature.geometry.coordinates.length === 2 &&
+					!isNaN(feature.geometry.coordinates[0]) &&
+					!isNaN(feature.geometry.coordinates[1])
+				) {
+					return true; // Hanya fitur valid yang akan ditampilkan
+				} else {
+					console.warn("Feature dengan ID:", feature.id, "memiliki koordinat invalid atau kosong.");
+					return false; // Lewati fitur dengan data invalid
+				}
+			},
+			onEachFeature: function (feature, layer) {
+				// Memastikan data tersedia dan menampilkan popup
+				layer.setIcon(opsukabumiIcon);
+				layer.bindPopup(`
+					<b>No:</b> ${feature.properties.No || "Tidak tersedia"}<br>
+					<b>PPK:</b> ${feature.properties.PPK || "Tidak tersedia"}<br>
+					<b>Ruas:</b> ${feature.properties.Ruas || "Tidak tersedia"}<br>
+					<b>Bencana:</b> ${feature.properties.Bencana || "Tidak tersedia"}<br>
+					<b>Perlu Perhatian Khusus:</b> ${feature.properties.PerKh || "Tidak tersedia"}<br>
+					<b>KM:</b> ${feature.properties.KM || "Tidak tersedia"}<br>
+					<b>Penanganan:</b> ${feature.properties.Penanganan || "Tidak tersedia"}<br>
+					<b>Status Operasional:</b> ${feature.properties.Stat_opr || "Tidak tersedia"}<br>
+					<b>Catatan:</b> ${feature.properties.Catatan || "Tidak tersedia"}<br>
+
+					${generatePhotoSections(feature)}
+				`);
+			}
+		}).addTo(map);
+		// Tambahkan data GeoJSON ke peta
+		// Tambahkan GeoJSON dengan logika warna dan popup berdasarkan LINKID
+		L.geoJSON(jalnas, {
+			style: function(feature) {
+				// Gunakan LINKID untuk menentukan warna
+				var linkId = feature.properties.LINKID || 0; // Default ke 0 jika LINKID tidak ada
+				var colors = ['red', 'green', 'blue', 'orange', 'purple', 'brown', 'pink', 'cyan'];
+				var color = colors[linkId % colors.length]; // Pilih warna berdasarkan LINKID
+				return {
+					color: color,
+					weight: 5,
+					opacity: 0.6
+				};
+			},
+			onEachFeature: function(feature, layer) {
+				// Popup dengan properti yang diinginkan
+				if (feature.properties) {
+					layer.bindPopup(`
+						<b>LINKID:</b> ${feature.properties.LINKID || "Tidak tersedia"}<br>
+						<b>Nama Ruas:</b> ${feature.properties.Nama_Ruas || "Tidak tersedia"}<br>
+						<b>Satker:</b> ${feature.properties.Satker || "Tidak tersedia"}<br>
+						<b>PPK:</b> ${feature.properties.PPK || "Tidak tersedia"}<br>
+						<b>Panjang SK (km):</b> ${feature.properties.Panjang_SK__km_ || "Tidak tersedia"}<br>
+						<b>Lintas:</b> ${feature.properties.Lintas || "Tidak tersedia"}<br>
+						<b>Kab/Kota:</b> ${feature.properties.Kab_Kota || "Tidak tersedia"}<br>
+						<b>Referensi Awal Ruas:</b> ${feature.properties.Referensi_Awal || "Tidak tersedia"}<br>
+						<b>Referensi Akhir Ruas:</b> ${feature.properties.Referensi_Akhir || "Tidak tersedia"}<br>
+						<b>No SK:</b> ${feature.properties.No_SK || "Tidak tersedia"}
+					`);
+				}
+			}
+		}).addTo(map); // Tambahkan ke peta
+		
+		// Cek apakah browser mendukung Geolocation
+		if ('geolocation' in navigator) {
+			let userMarker; // Marker untuk lokasi pengguna
+
+			// Fungsi untuk mengupdate posisi pengguna
+			const updatePosition = (position) => {
+				const { latitude, longitude } = position.coords;
+
+				if (!userMarker) {
+					// Jika marker belum ada, tambahkan marker baru dengan ikon kustom
+					userMarker = L.marker([latitude, longitude], { icon: geoLocationIcon })
+						.addTo(map)
+						.bindPopup("Lokasi Anda")
+						.openPopup();
+				} else {
+					// Jika marker sudah ada, ubah posisinya
+					userMarker.setLatLng([latitude, longitude]);
+				}
+			};
+
+			// Mulai memantau perubahan posisi
+			navigator.geolocation.watchPosition(
+				updatePosition,
+				(error) => {
+					console.error("Gagal memantau lokasi pengguna:", error);
+				},
+				{
+					enableHighAccuracy: true, // Gunakan lokasi dengan akurasi tinggi
+					maximumAge: 0,            // Jangan gunakan cache
+					timeout: 10000            // Waktu maksimal untuk mendapatkan lokasi
+				}
+			);
+		} else {
+			alert("Browser Anda tidak mendukung Geolocation.");
+		}
     </script>
 </body>
 </html>

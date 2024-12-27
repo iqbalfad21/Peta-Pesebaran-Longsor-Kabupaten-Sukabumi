@@ -111,7 +111,36 @@
                 `);
             }
         }).addTo(map);
-
+        // Menambahkan data jalnas ke peta
+        L.geoJSON(jalnas, {
+            style: function(feature) {
+                var linkId = feature.properties.LINKID || 0;
+                var colors = ['red', 'green', 'blue', 'orange', 'purple', 'brown', 'pink', 'cyan'];
+                var color = colors[linkId % colors.length];
+                return {
+                    color: color,
+                    weight: 5,
+                    opacity: 0.6
+                };
+            },
+            onEachFeature: function(feature, layer) {
+                if (feature.properties) {
+                    layer.bindPopup(`
+                        <b>LINKID:</b> ${feature.properties.LINKID || "Tidak tersedia"}<br>
+                        <b>Nama Ruas:</b> ${feature.properties.Nama_Ruas || "Tidak tersedia"}<br>
+                        <b>Satker:</b> ${feature.properties.Satker || "Tidak tersedia"}<br>
+                        <b>PPK:</b> ${feature.properties.PPK || "Tidak tersedia"}<br>
+                        <b>Panjang SK (km):</b> ${feature.properties.Panjang_SK__km_ || "Tidak tersedia"}<br>
+                        <b>Lintas:</b> ${feature.properties.Lintas || "Tidak tersedia"}<br>
+                        <b>Kab/Kota:</b> ${feature.properties.Kab_Kota || "Tidak tersedia"}<br>
+                        <b>Referensi Awal Ruas:</b> ${feature.properties.Referensi_Awal || "Tidak tersedia"}<br>
+                        <b>Referensi Akhir Ruas:</b> ${feature.properties.Referensi_Akhir || "Tidak tersedia"}<br>
+                        <b>No SK:</b> ${feature.properties.No_SK || "Tidak tersedia"}
+                    `);
+                }
+            }
+        }).addTo(map);
+        
         // Geolocation untuk pengguna
         if ('geolocation' in navigator) {
             let userMarker;

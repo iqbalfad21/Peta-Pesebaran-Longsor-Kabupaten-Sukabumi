@@ -6,76 +6,112 @@
     <title>Peta Interaktif</title>
     <link rel="stylesheet" href="lib/leaflet/leaflet.css" />
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&display=swap" rel="stylesheet">
-	<style>
-		#map { 
-			height: 85vh; 
-		}
-		/* Styling untuk container konten popup */
-		.leaflet-popup-content {
-			width: 300px; /* Sesuaikan ukuran popup */
-			max-height: 300px; /* Batas maksimal tinggi popup */
-			overflow-y: auto; /* Tambahkan scroll jika konten terlalu panjang */
-			box-sizing: border-box; /* Pastikan padding masuk ke ukuran */
-		}
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            background: #f9fafc;
+            color: #333;
+            line-height: 1.6;
+        }
 
-		/* Styling untuk gambar dalam popup */
-		.popup-images {
-			display: flex;
-			gap: 10px;
-			flex-wrap: wrap;
-			justify-content: center;
-		}
-		.popup-images img {
-			width: 48%; /* Lebar gambar dalam popup */
-			max-width: 140px; /* Maksimum lebar gambar */
-			height: auto; /* Pertahankan proporsi gambar */
-		}
-		.photo-section {
-			margin-bottom: 10px;
-		}
-		.photo-section h3 {
-			margin: 0;
-			font-size: 1em; /* Sesuaikan ukuran font heading */
-		}
+        header {
+            text-align: center;
+            padding: 20px;
+            background: linear-gradient(135deg, #0078d7, #005a9e);
+            color: white;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
 
-	         /* Styling untuk h1 (Header utama) */
-	        h1 {
-	        	font-family: 'Poppins', sans-serif;
-		        font-size: 1.3em; /* Lebih kecil */
-		        background: linear-gradient(45deg, #ff7f50, #ff6347);
-		        color: transparent;
-		        background-clip: text;
-		        text-align: center;
-		        /*text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.4);*/
-		        animation: fadeIn 1s ease-in-out;
-	        }
-	        /* Styling untuk h2 (Subjudul) */
-	        h2 {
-	            	font-family: 'Poppins', sans-serif;
-	            	font-size: 1em; /* Lebih kecil */
-	            	color: #235;
-	            	text-align: center;
-	
-	        }
-	
-	        /* Animasi fadeIn untuk h1 */
-	        @keyframes fadeIn {
-	            	0% {
-	                	opacity: 0;
-	                	transform: translateY(-30px);
-	            	}
-	            	100% {
-	                	opacity: 1;
-	                	transform: translateY(0);
-	            }
-	        }
-	</style>
+        header h1 {
+            font-size: 2rem;
+            margin: 0;
+        }
 
+        header h2 {
+            font-size: 1rem;
+            font-weight: 400;
+            margin: 5px 0 0;
+        }
+
+        #map {
+            height: 80vh;
+            margin: 20px auto;
+            border-radius: 10px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            max-width: 1200px;
+        }
+        
+        .leaflet-popup-content {
+            font-size: 0.9rem;
+            width: 500px; /* Sesuaikan ukuran popup agar gambar lebih lebar */            
+        }      
+        
+        .popup-images {
+            display: flex;
+            gap: 30px;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+        .popup-images img {
+            width: 70%; /* Lebar gambar, bisa diubah jika perlu */
+            max-width: 640px; /* Maksimum lebar gambar */
+            height: auto; /* Pertahankan proporsi gambar */
+        }
+        .photo-section {
+            margin-bottom: 10px;
+        }
+        .photo-section h3 {
+            margin: 0;
+        }
+     
+        .leaflet-bar a {
+            background: #0078d7;
+            border: none;
+            color: white;
+            transition: background 0.3s;
+        }
+
+        .leaflet-bar a:hover {
+            background: #005a9e;
+        }
+
+        footer {
+            text-align: center;
+            padding: 10px;
+            background: #0078d7;
+            color: white;
+            font-size: 0.9rem;
+            box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 1.5rem;
+            }
+
+            header h2 {
+                font-size: 0.9rem;
+            }
+
+            #map {
+                height: calc(100vh - 140px);
+                margin: 10px auto;
+            }
+        }
+    </style>
 </head>
 <body>
+    <header>
     <h1>Peta Pesebaran Longsor Kabupaten Sukabumi</h1>
     <h2>BBPJN DKI Jakarta - Jawa Barat</h2>
+    </header>
+
     <div id="map"></div>
+
+    <footer>
+        &copy; 2024 BBPJN DKI Jakarta - Jawa Barat. All Rights Reserved.
+    </footer>
 
     <script src="lib/leaflet/leaflet.js"></script>
     <!-- Mengimpor file geojsonData.js yang berisi data GeoJSON -->

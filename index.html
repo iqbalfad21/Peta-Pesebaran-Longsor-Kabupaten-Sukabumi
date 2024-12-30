@@ -6,66 +6,74 @@
     <title>Peta Interaktif</title>
     <link rel="stylesheet" href="lib/leaflet/leaflet.css" />
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&display=swap" rel="stylesheet">
-    <style>
-        #map { 
-            height: 75vh; 
-        }
-        /* Memperbesar container gambar dalam popup */
-        .leaflet-popup-content {
-            width: 500px; /* Sesuaikan ukuran popup agar gambar lebih lebar */
-        }
-        .popup-images {
-            display: flex;
-            gap: 30px;
-            flex-wrap: wrap;
-            justify-content: space-between;
-        }
-        .popup-images img {
-            width: 70%; /* Lebar gambar, bisa diubah jika perlu */
-            max-width: 640px; /* Maksimum lebar gambar */
-            height: auto; /* Pertahankan proporsi gambar */
-        }
-        .photo-section {
-            margin-bottom: 10px;
-        }
-        .photo-section h3 {
-            margin: 0;
-        }
-        /* Styling untuk h1 (Header utama) */
-        h1 {
-            font-family: 'Poppins', sans-serif;
-            font-size: 2.5em; /* Lebih kecil */
-            background: linear-gradient(45deg, #ff7f50, #ff6347);
-            color: transparent;
-            background-clip: text;
-            text-align: center;
-            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.4);
-            margin-top: 20px;
-            padding: 10px 0;
-            animation: fadeIn 1s ease-in-out;
-        }
-        /* Styling untuk h2 (Subjudul) */
-        h2 {
-            font-family: 'Poppins', sans-serif;
-            font-size: 1.5em; /* Lebih kecil */
-            color: #235;
-            text-align: center;
-            margin-top: 10px;
-            padding-bottom: 20px;
-        }
+	<style>
+		#map { 
+			height: 75vh; 
+		}
+		/* Styling untuk container konten popup */
+		.leaflet-popup-content {
+			width: 300px; /* Sesuaikan ukuran popup */
+			max-height: 300px; /* Batas maksimal tinggi popup */
+			overflow-y: auto; /* Tambahkan scroll jika konten terlalu panjang */
+			box-sizing: border-box; /* Pastikan padding masuk ke ukuran */
+		}
 
-        /* Animasi fadeIn untuk h1 */
-        @keyframes fadeIn {
-            0% {
-                opacity: 0;
-                transform: translateY(-30px);
-            }
-            100% {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-    </style>
+		/* Styling untuk gambar dalam popup */
+		.popup-images {
+			display: flex;
+			gap: 10px;
+			flex-wrap: wrap;
+			justify-content: center;
+		}
+		.popup-images img {
+			width: 48%; /* Lebar gambar dalam popup */
+			max-width: 140px; /* Maksimum lebar gambar */
+			height: auto; /* Pertahankan proporsi gambar */
+		}
+		.photo-section {
+			margin-bottom: 10px;
+		}
+		.photo-section h3 {
+			margin: 0;
+			font-size: 1em; /* Sesuaikan ukuran font heading */
+		}
+
+		/* Styling untuk h1 (Header utama) */
+		h1 {
+			font-family: 'Poppins', sans-serif;
+			font-size: 2.5em; /* Lebih kecil */
+			background: linear-gradient(45deg, #ff7f50, #ff6347);
+			color: transparent;
+			background-clip: text;
+			text-align: center;
+			text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.4);
+			margin-top: 20px;
+			padding: 10px 0;
+			animation: fadeIn 1s ease-in-out;
+		}
+		/* Styling untuk h2 (Subjudul) */
+		h2 {
+			font-family: 'Poppins', sans-serif;
+			font-size: 1.5em; /* Lebih kecil */
+			color: #235;
+			text-align: center;
+			margin-top: 10px;
+			padding-bottom: 20px;
+		}
+
+		/* Animasi fadeIn untuk h1 */
+		@keyframes fadeIn {
+			0% {
+				opacity: 0;
+				transform: translateY(-30px);
+			}
+			100% {
+				opacity: 1;
+				transform: translateY(0);
+			}
+		}
+	</style>
+
 </head>
 <body>
     <h1>Peta Pesebaran Longsor Kabupaten Sukabumi</h1>

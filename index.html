@@ -7,6 +7,19 @@
     <link rel="stylesheet" href="lib/leaflet/leaflet.css" />
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&display=swap" rel="stylesheet">
     <style>
+        .leaflet-popup-content {
+		max-height: 300px; /* Batas tinggi maksimum popup */
+		overflow-y: auto; /* Aktifkan scroll secara vertikal */
+		padding-right: 10px; /* Tambahkan sedikit jarak untuk scroll bar */
+		box-sizing: border-box; /* Pastikan padding dihitung dalam ukuran elemen */
+	}
+	.leaflet-popup-content-wrapper {
+		border-radius: 10px; /* Supaya sudutnya kotak */
+		box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.4); /* Sedikit bayangan untuk estetika */
+	}
+	.leaflet-popup-tip {
+		border: none; /* Hilangkan segitiga di bawah popup */
+	}
         body {
             margin: 0;
             font-family: 'Poppins', sans-serif;
